@@ -7,6 +7,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import sys
 import os
+import tempfile
 
 # Add src to path
 src_path = os.path.join(os.path.dirname(__file__), 'src')
@@ -92,7 +93,7 @@ def test_indicators():
         print(f"  {i}. {col}")
     
     # Save sample data
-    output_file = '/tmp/sample_btc_data.csv'
+    output_file = os.path.join(tempfile.gettempdir(), 'sample_btc_data.csv')
     df_with_indicators.to_csv(output_file, index=False)
     print(f"\nSample data saved to: {output_file}")
     

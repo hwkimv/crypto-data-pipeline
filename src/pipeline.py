@@ -190,37 +190,37 @@ def main():
     import argparse
     
     parser = argparse.ArgumentParser(
-        description='바이낸스 BTC/USDT 데이터 수집 및 기술지표 계산 파이프라인'
+        description='Binance BTC/USDT Data Collection and Technical Indicator Pipeline / 바이낸스 BTC/USDT 데이터 수집 및 기술지표 계산 파이프라인'
     )
     parser.add_argument(
         '--start-date',
         type=str,
         default=None,
-        help='시작 날짜 (YYYY-MM-DD format, default: 2017-01-01)'
+        help='Start date (YYYY-MM-DD format, default: 2017-01-01) / 시작 날짜'
     )
     parser.add_argument(
         '--end-date',
         type=str,
         default=None,
-        help='종료 날짜 (YYYY-MM-DD format, default: today)'
+        help='End date (YYYY-MM-DD format, default: today) / 종료 날짜'
     )
     parser.add_argument(
         '--output',
         type=str,
         default=None,
-        help='출력 CSV 파일 경로 (default: btc_usdt_1m_TIMESTAMP.csv)'
+        help='Output CSV file path (default: btc_usdt_1m_TIMESTAMP.csv) / 출력 CSV 파일 경로'
     )
     parser.add_argument(
         '--symbol',
         type=str,
         default='BTC/USDT',
-        help='거래 페어 심볼 (default: BTC/USDT)'
+        help='Trading pair symbol (default: BTC/USDT) / 거래 페어 심볼'
     )
     parser.add_argument(
         '--timeframe',
         type=str,
         default='1m',
-        help='캔들 타임프레임 (default: 1m)'
+        help='Candle timeframe (default: 1m) / 캔들 타임프레임'
     )
     
     args = parser.parse_args()
