@@ -20,22 +20,33 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# Virtual Environment
+.venv/
 venv/
 ENV/
 env/
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
 *~
 
-# Data files
-*.csv
-data/
-
 # OS
 .DS_Store
 Thumbs.db
+
+# Data files (optional - uncomment if you don't want to track data)
+# data/csv/*.csv
+# data/parquet/*.parquet
+
+# Logs
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+

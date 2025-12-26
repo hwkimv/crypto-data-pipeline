@@ -22,6 +22,8 @@ A Python pipeline to collect complete historical BTC/USDT 1-minute candle data f
 
 3. **데이터 저장 (Data Storage)**
    - OHLCV + 기술 지표를 CSV 파일로 저장
+   - Parquet 형식 지원 (압축률 34% 절감, 빠른 읽기/쓰기)
+   - 월 단위 자동 데이터 저장 기능
    - 타임스탬프, 가격, 거래량, 모든 지표 포함
 
 ## 설치 (Installation)
@@ -40,6 +42,12 @@ pip install -r requirements.txt
 ### 기본 실행 (Basic Usage)
 
 ```bash
+# 바이낸스 연결 테스트
+python test_binance_connection.py
+
+# 월 단위 데이터 저장 (2024년 12월)
+python monthly_data_saver.py
+
 # 전체 과거 데이터 수집 (2017-01-01부터 현재까지)
 python src/pipeline.py
 
@@ -48,6 +56,9 @@ python src/pipeline.py --start-date 2024-01-01 --end-date 2024-12-31
 
 # 출력 파일명 지정
 python src/pipeline.py --output my_btc_data.csv
+
+# 저장된 데이터 확인
+python check_saved_data.py
 ```
 
 ### 고급 옵션 (Advanced Options)
@@ -67,6 +78,37 @@ python src/pipeline.py \
 
 ### Python 코드에서 사용 (Using in Python Code)
 
+#### 1. 월 단위 데이터 저장
+
+```python
+from monthly_data_saver import MonthlyDataSaver
+
+# 데이터 저장 객체 생성
+saver = MonthlyDataSaver(
+    symbol='BTC/USDT',
+    timeframe='1m',
+    data_dir='data'
+)
+
+# 2024년 12월 데이터 저장
+saver.save_month_data(
+    year=2024,
+    month=12,
+    save_csv=True,      # CSV 저장
+    save_parquet=True   # Parquet 저장
+)
+
+# 여러 월 데이터 한 번에 저장 (2024년 10월~12월)
+saver.save_multiple_months(
+    start_year=2024, start_month=10,
+    end_year=2024, end_month=12,
+    save_csv=True,
+    save_parquet=True
+)
+```
+
+#### 2. 전체 파이프라인 실행
+
 ```python
 from src.pipeline import CryptoDataPipeline
 
@@ -85,18 +127,43 @@ print(df.head())
 print(df.columns)
 ```
 
+#### 3. 저장된 데이터 읽기
+
+```python
+import pandas as pd
+
+# CSV 파일 읽기
+df_csv = pd.read_csv('data/csv/BTC_USDT_2024_12_1m.csv')
+df_csv['timestamp'] = pd.to_datetime(df_csv['timestamp'])
+
+# Parquet 파일 읽기 (더 빠르고 용량 효율적)
+df_parquet = pd.read_parquet('data/parquet/BTC_USDT_2024_12_1m.parquet')
+
+print(f"총 데이터: {len(df_parquet):,}개")
+print(df_parquet.tail(5))
+```
+
 ## 프로젝트 구조 (Project Structure)
 
 ```
 crypto-data-pipeline/
 ├── src/
-│   ├── __init__.py           # Package initialization
-│   ├── data_collector.py     # Binance data collection module
-│   ├── indicators.py         # Technical indicators calculation
-│   └── pipeline.py           # Main pipeline execution
-├── requirements.txt          # Python dependencies
-├── .gitignore               # Git ignore rules
-└── README.md                # This file
+│   ├── __init__.py              # 패키지 초기화
+│   ├── data_collector.py        # 바이낸스 데이터 수집 모듈
+│   ├── indicators.py            # 기술 지표 계산
+│   └── pipeline.py              # 메인 파이프라인 실행
+├── data/
+│   ├── csv/                     # CSV 형식 데이터 저장소
+│   │   └── BTC_USDT_2024_12_1m.csv
+│   └── parquet/                 # Parquet 형식 데이터 저장소
+│       └── BTC_USDT_2024_12_1m.parquet
+├── monthly_data_saver.py        # 월 단위 데이터 저장 스크립트
+├── check_saved_data.py          # 저장된 데이터 확인 스크립트
+├── test_binance_connection.py  # 바이낸스 연결 테스트
+├── example_usage.py             # 사용 예제 모음
+├── requirements.txt             # Python 의존성 패키지
+├── .gitignore                   # Git 제외 규칙
+└── README.md                    # 이 파일
 ```
 
 ## 출력 데이터 형식 (Output Data Format)
@@ -127,6 +194,7 @@ CSV 파일에는 다음 컬럼이 포함됩니다:
 - **ccxt**: 암호화폐 거래소 API 라이브러리
 - **pandas**: 데이터 처리 및 분석
 - **numpy**: 수치 계산
+- **pyarrow**: Parquet 파일 형식 지원 (빠르고 효율적인 데이터 저장)
 
 ## 데이터 검증 (Data Validation)
 

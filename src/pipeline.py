@@ -186,46 +186,46 @@ class CryptoDataPipeline:
 
 
 def main():
-    """Main execution function"""
+    """메인 실행 함수 - 커맨드라인 인자 처리"""
     import argparse
     
     parser = argparse.ArgumentParser(
-        description='Binance BTC/USDT Data Collection and Technical Indicator Pipeline / 바이낸스 BTC/USDT 데이터 수집 및 기술지표 계산 파이프라인'
+        description='바이낸스 BTC/USDT 데이터 수집 및 기술지표 계산 파이프라인'
     )
     parser.add_argument(
         '--start-date',
         type=str,
         default=None,
-        help='Start date (YYYY-MM-DD format, default: 2017-01-01) / 시작 날짜'
+        help='시작 날짜 (YYYY-MM-DD, 기본: 2017-01-01)'
     )
     parser.add_argument(
         '--end-date',
         type=str,
         default=None,
-        help='End date (YYYY-MM-DD format, default: today) / 종료 날짜'
+        help='종료 날짜 (YYYY-MM-DD, 기본: 오늘)'
     )
     parser.add_argument(
         '--output',
         type=str,
         default=None,
-        help='Output CSV file path (default: btc_usdt_1m_TIMESTAMP.csv) / 출력 CSV 파일 경로'
+        help='출력 CSV 파일 경로 (기본: btc_usdt_1m_TIMESTAMP.csv)'
     )
     parser.add_argument(
         '--symbol',
         type=str,
         default='BTC/USDT',
-        help='Trading pair symbol (default: BTC/USDT) / 거래 페어 심볼'
+        help='거래쌍 (기본: BTC/USDT)'
     )
     parser.add_argument(
         '--timeframe',
         type=str,
         default='1m',
-        help='Candle timeframe (default: 1m) / 캔들 타임프레임'
+        help='캔들 간격 (기본: 1m)'
     )
     
     args = parser.parse_args()
     
-    # Create and run pipeline
+    # 파이프라인 실행
     pipeline = CryptoDataPipeline(symbol=args.symbol, timeframe=args.timeframe)
     
     try:
@@ -235,10 +235,10 @@ def main():
             output_file=args.output
         )
     except KeyboardInterrupt:
-        print("\n\nPipeline interrupted by user")
+        print("\n\n사용자가 중단했습니다")
         sys.exit(1)
     except Exception as e:
-        print(f"\n\nPipeline failed: {e}")
+        print(f"\n\n파이프라인 실패: {e}")
         sys.exit(1)
 
 
